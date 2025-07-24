@@ -19,6 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('provider_auth', ['email', 'google', 'facebook'])->default('email');
+            $table->string('provider_user_id')->nullable();
+            $table->date('premium_expired_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
