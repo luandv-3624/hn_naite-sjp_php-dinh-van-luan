@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'provider_auth',
+        'provider_user_id',
+        'premium_expired_at',
     ];
 
     /**
@@ -41,5 +44,36 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'premium_expired_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
+
+    public function servicePackages()
+    {
+        return $this->hasMany(UserServicePackage::class);
+    }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'author_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function feedbackReports()
+    {
+        return $this->hasMany(UserFeedbackReport::class);
+    }
 }
