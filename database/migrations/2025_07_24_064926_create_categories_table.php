@@ -20,7 +20,6 @@ class CreateCategoriesTable extends Migration
             $table->foreignId('category_parent_id')->nullable()->constrained('categories')->onDelete('cascade');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->boolean('default')->default(false);
-            $table->enum('wallet_type', ['basic', 'saving', 'credit', 'linked'])->nullable();
             $table->timestamps();
         });
     }

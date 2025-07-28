@@ -46,4 +46,9 @@ class Category extends Model
     {
         return $this->hasMany(Budget::class);
     }
+
+    public function walletTypes()
+    {
+        return $this->belongsToMany(WalletType::class, 'category_wallet_types');
+    }
 }
