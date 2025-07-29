@@ -42,21 +42,28 @@
 
                     <x-flash-message />
 
+                    <div class="flex justify-end mb-4">
+                        <a href="{{ route('categories.create') }}"
+                            class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
+                            {{ __('category.add_category') }}
+                        </a>
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">{{ __('ID') }}
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                    {{ __('Category Name') }}</th>
+                                    {{ __('category.category_name') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                    {{ __('Category Type') }}</th>
+                                    {{ __('category.category_type') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                    {{ __('Category Parent') }}</th>
+                                    {{ __('category.category_parent') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">
                                     {{ __('Created By') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                    {{ __('Wallet Apply') }}</th>
+                                    {{ __('category.wallet_apply') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">{{ __('Actions') }}
                                 </th>
                             </tr>
@@ -94,10 +101,12 @@
                                         @endforelse
                                     </td>
                                     <td class="px-6 py-4 text-sm flex space-x-4">
-                                        <a href="#" class="text-green-600 hover:text-green-900" title="View">
+                                        <a href="{{ route('categories.show', $category->id) }}"
+                                            class="text-green-600 hover:text-green-900" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900" title="Edit">
+                                        <a href="{{ route('categories.edit', $category->id) }}"
+                                            class="text-indigo-600 hover:text-indigo-900" title="Edit">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST"

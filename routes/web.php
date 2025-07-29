@@ -39,6 +39,11 @@ Route::middleware(['auth', 'check.admin'])
 
         Route::prefix('categories')->group(function () {
             Route::get('/', [CategoryManagementController::class, 'index'])->name('categories.index');
+            Route::get('/create', [CategoryManagementController::class, 'create'])->name('categories.create');
+            Route::get('/{category}', [CategoryManagementController::class, 'show'])->name('categories.show');
+            Route::post('/', [CategoryManagementController::class, 'store'])->name('categories.store');
+            Route::get('/{category}/edit', [CategoryManagementController::class, 'edit'])->name('categories.edit');
+            Route::put('/{category}', [CategoryManagementController::class, 'update'])->name('categories.update');
             Route::delete('/{category}', [CategoryManagementController::class, 'destroy'])->name('categories.destroy');
         });
     });
