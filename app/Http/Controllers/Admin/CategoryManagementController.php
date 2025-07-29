@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Models\WalletType;
 use App\Models\Category;
@@ -66,13 +67,119 @@ class CategoryManagementController extends Controller
 
         $typeConfig = collect($this->typeConfig);
 
-        $walletTypes = WalletType::all(['id', 'name']);
-        $walletConfig = collect($walletTypes)->mapWithKeys(function ($item) {
-            $config = $this->walletTypeConfigs[$item->name] ?? ['label' => $item->name, 'class' => 'text-gray-400'];
-            return [$item->id => array_merge($config, ['name' => $item->name])];
-        });
+        $walletConfig = $this->getWalletConfig();
 
         return view('admin.category-management.index', compact('categories', 'typeConfig', 'walletConfig'));
+    }
+
+    public function show(Category $category)
+    {
+        $category->load(['parent:id,name', 'creator:id,name', 'walletTypes:id,name']);
+
+        $typeConfig = collect($this->typeConfig);
+
+        $walletConfig = $this->getWalletConfig();
+
+        return view('admin.category-management.show', compact('category', 'typeConfig', 'walletConfig'));
+    }
+
+    public function create()
+    {
+        $typeConfig = collect($this->typeConfig);
+
+        $walletConfig = $this->getWalletConfig();
+
+        $parents = Category::select('id', 'name')->get();
+
+        return view('admin.category-management.create', compact('typeConfig', 'walletConfig', 'parents'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|string',
+            'category_parent_id' => 'nullable|exists:categories,id',
+            'wallet_types' => 'nullable|array',
+            'wallet_types.*' => 'exists:wallet_types,id',
+        ]);
+
+        if (empty($validated['wallet_types']) || count($validated['wallet_types']) === 0) {
+            return back()
+                ->withErrors(['wallet_types' => __('category.wallet_types_required')])
+                ->withInput();
+        }
+
+        $category = Category::create([
+            'name' => $validated['name'],
+            'type' => $validated['type'],
+            'category_parent_id' => $validated['category_parent_id'] ?? null,
+            'created_by' => auth()->id(),
+            'default' => true,
+        ]);
+
+        $category->walletTypes()->sync($validated['wallet_types']);
+
+        return redirect()->route('categories.index')
+            ->with('success', __('category.category_created_success'));
+    }
+
+    public function edit(Category $category)
+    {
+        $typeConfig = collect($this->typeConfig);
+        $walletConfig = $this->getWalletConfig();
+        $parents = Category::where('id', '!=', $category->id)->select('id', 'name')->get();
+        $selectedWalletTypes = $category->walletTypes->pluck('id')->toArray();
+
+        return view('admin.category-management.edit', compact(
+            'category',
+            'typeConfig',
+            'walletConfig',
+            'parents',
+            'selectedWalletTypes'
+        ));
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|string',
+            'category_parent_id' => 'nullable|exists:categories,id|not_in:' . $category->id,
+            'wallet_types' => 'nullable|array',
+            'wallet_types.*' => 'exists:wallet_types,id',
+        ]);
+
+        if (empty($validated['wallet_types'])) {
+            return back()
+                ->withErrors(['wallet_types' => __('category.wallet_types_required')])
+                ->withInput();
+        }
+
+        $category->update([
+            'name' => $validated['name'],
+            'type' => $validated['type'],
+            'category_parent_id' => $validated['category_parent_id'] ?? null,
+        ]);
+
+        $category->walletTypes()->sync($validated['wallet_types']);
+
+        return redirect()->route('categories.index')
+            ->with('success', __('category.category_updated_success'));
+    }
+
+    private function getWalletConfig(): Collection
+    {
+        $walletTypes = WalletType::all(['id', 'name']);
+
+        return collect($walletTypes)->mapWithKeys(function ($item) {
+            $config = $this->walletTypeConfigs[$item->name] ?? [
+                'label' => $item->name,
+                'class' => 'text-gray-400'
+            ];
+
+            return [ (string) $item->id => array_merge($config, ['name' => $item->name])];
+        });
     }
 
     public function destroy(Category $category)

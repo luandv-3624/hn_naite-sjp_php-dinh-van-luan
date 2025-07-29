@@ -60,5 +60,9 @@ class DatabaseSeeder extends Seeder
                     collect($walletTypeIds)->random(rand(1, 3))->all()
                 );
             });
+
+        $this->call([
+            CurrencySeeder::class,
+        ]);
     }
 }

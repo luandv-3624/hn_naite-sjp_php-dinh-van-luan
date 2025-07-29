@@ -23,6 +23,10 @@
                     <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
                         {{ __('Category Management') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('currencies.index')" :active="request()->routeIs('currencies.*')">
+                        {{ __('currency.currency_management') }}
+                    </x-nav-link>
                 </div>
             </div>
 
