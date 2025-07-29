@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\CategoryManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,19 @@ Route::get('/language/{lang}', function ($locale) {
 Route::middleware(['auth', 'check.admin'])
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-        Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
-        Route::get('/users/{user}', [UserManagementController::class, 'show'])->name('users.show');
-        Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
-        Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
-        Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserManagementController::class, 'index'])->name('users.index');
+            Route::get('/{user}', [UserManagementController::class, 'show'])->name('users.show');
+            Route::get('/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
+            Route::put('/{user}', [UserManagementController::class, 'update'])->name('users.update');
+            Route::delete('/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+        });
+
+        Route::prefix('categories')->group(function () {
+            Route::get('/', [CategoryManagementController::class, 'index'])->name('categories.index');
+            Route::delete('/{category}', [CategoryManagementController::class, 'destroy'])->name('categories.destroy');
+        });
     });
 
 require __DIR__ . '/auth.php';

@@ -62,7 +62,18 @@ và update role cho user lên premium user
   category_parent_id int // Ví dụ: Ăn uống, Nhóm Mua sắm: Đồ dùng cá nhân, Đồ gia dụng ,....
   created_by int
   default boolean // true: admin tạo làm nhóm chung
-  wallet_type enum // Ví cơ bản, Ví tiết kiệm, Ví tín dụng, Ví liên kết (Chỉ enable với admin)
+}
+
+**Wallet Types**: Các loại ví
+> Table wallet_types {
+  id int pk
+  name varchar // basic: Basic Wallet, saving: Saving Wallet, credit: Credit Wallet, linked: Linked Wallet
+}
+
+**Category Wallet Types**
+> Table category_wallet_types {
+  category_id int
+  wallet_type int
 }
 
 **Currency**: Danh sách đơn vị tiền tệ
@@ -235,3 +246,5 @@ php artisan make:migration create_blog_likes_table --create=blog_likes
 php artisan make:migration create_blog_shares_table --create=blog_shares
 php artisan make:migration create_notifications_table --create=notifications
 php artisan make:migration create_user_feedback_reports_table --create=user_feedback_reports
+php artisan make:migration create_wallet_types_table --create=wallet_types
+php artisan make:migration create_category_wallet_types_table --create=category_wallet_types

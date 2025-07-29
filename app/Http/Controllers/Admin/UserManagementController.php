@@ -13,6 +13,7 @@ class UserManagementController extends Controller
 {
     protected array $roleBadges;
     protected array $defaultBadge;
+    private const PER_PAGE = 10;
 
     public function __construct()
     {
@@ -37,7 +38,7 @@ class UserManagementController extends Controller
             $query->whereHas('roles', fn ($q) => $q->where('name', $role));
         }
 
-        $users = tap($query->paginate(10))->withQueryString();
+        $users = tap($query->paginate(self::PER_PAGE))->withQueryString();
 
         $roleBadges = $this->roleBadges;
         $defaultBadge = $this->defaultBadge;
@@ -88,7 +89,7 @@ class UserManagementController extends Controller
             [$this->getRoleIdByName($validated['role'])]
         );
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully!');
+        return redirect()->route('users.index')->with('success', __('user.updated_success'));
     }
 
     protected function getRoleIdByName(string $roleName): int
@@ -96,7 +97,7 @@ class UserManagementController extends Controller
         $roleId = Role::where('name', $roleName)->value('id');
 
         if (!$roleId) {
-            abort(400, 'Invalid user role.');
+            abort(400, __('user.invalid_role'));
         }
 
         return $roleId;
@@ -106,11 +107,11 @@ class UserManagementController extends Controller
     {
         if ($user->hasRole(UserRoles::ADMIN)) {
             return redirect()->route('users.index')
-                ->with('error', 'You cannot delete an admin user.');
+                ->with('error', __('user.delete_error_admin'));
         }
 
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User deleted successfully!');
+        return redirect()->route('users.index')->with('success', __('user.deleted_success'));
     }
 }
