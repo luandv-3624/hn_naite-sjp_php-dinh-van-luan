@@ -16,5 +16,8 @@ return [
     'is_default' => 'Default',
     'search_currency_placeholder' => 'Search currency...',
     'reset' => 'Reset',
-    'update_exchange_rates_exception' => 'A system error occurred while updating exchange rates. Please try again later.'
+    'update_exchange_rates_exception' => 'A system error occurred while updating exchange rates. Please try again later.',
+    'set_default_success' => 'Default currency has been updated successfully.',
+    'set_default_error' => 'Failed to set default currency.',
+    'set_default' => 'Set as Default',
 ];

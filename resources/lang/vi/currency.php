@@ -17,4 +17,7 @@ return [
     'search_currency_placeholder' => 'Tìm kiếm tiền tệ...',
     'reset' => 'Đặt lại',
     'update_exchange_rates_exception' => 'Đã xảy ra lỗi hệ thống khi cập nhật tỷ giá. Vui lòng thử lại sau.',
+    'set_default_success' => 'Đã đặt tiền tệ mặc định thành công.',
+    'set_default_error' => 'Không thể đặt tiền tệ mặc định.',
+    'set_default' => 'Đặt làm mặc định',
 ];
