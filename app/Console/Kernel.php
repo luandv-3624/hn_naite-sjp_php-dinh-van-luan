@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('exchange-rates:update')->dailyAt('01:00'); // Mỗi ngày lúc 1h sáng
     }
 
     /**

@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\Admin\CurrencyManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,12 @@ Route::middleware(['auth', 'check.admin'])
             Route::get('/{category}/edit', [CategoryManagementController::class, 'edit'])->name('categories.edit');
             Route::put('/{category}', [CategoryManagementController::class, 'update'])->name('categories.update');
             Route::delete('/{category}', [CategoryManagementController::class, 'destroy'])->name('categories.destroy');
+        });
+
+        Route::prefix('currencies')->group(function () {
+            Route::get('/', [CurrencyManagementController::class, 'index'])->name('currencies.index');
+            Route::post('/update-exchange-rates', [CurrencyManagementController::class, 'updateExchangeRates'])
+                ->name('currencies.updateExchangeRates');
         });
     });
 

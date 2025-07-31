@@ -82,9 +82,30 @@ và update role cho user lên premium user
   currency_name varchar // 	Tên tiền tệ (VD: Đồng Việt Nam, Đô la Mỹ)
   code varchar // VND, EUR, USD
   symbol varchar // Ký hiệu (VD: ₫, $, €)
-  exchange_rate decimal // Tỷ giá so với tiền tệ mặc định của hệ thống (VD: VND = 25,000, USD = 1)
+  // exchange_rate decimal // Tỷ giá so với tiền tệ mặc định của hệ thống (VD: VND = 25,000, USD = 1)
   is_default boolean // Tiền tệ mặc định của hệ thống
   updated_at datetime
+}
+
+// Table exchange_rates: Lưu lịch sử tỷ giá hàng ngày so với USD
+// Cronjob chạy định kỳ 24h để update
+> Table exchange_rates {
+  id int pk
+  currency_id int
+  date date                    // Ngày áp dụng tỷ giá
+  target_currency_code varchar // Mã tiền tệ được quy đổi (VND, EUR, JPY...)
+  rate decimal                 // Tỷ giá so với USD (1 USD = ? target_currency)
+  
+  // Tạo unique key này để đảm bảo mỗi ngày chỉ có 1 tỷ giá cho mỗi loại tiền tệ
+  UNIQUE KEY (date, target_currency_code) 
+}
+
+// Table users: Thêm cột main_currency_code
+> Table user_settings {
+  user_setting_id int pk
+  user_id int
+  currency_id int // Loại tiền tệ mặc định cho ví tổng 
+  language_default enum // vi, en 
 }
 
 **Wallet**: Ở đây để đơn giản sẽ chỉ thiết lập 2 loại ví: "Ví cơ bản", "Ví tiết kiệm"
@@ -248,3 +269,6 @@ php artisan make:migration create_notifications_table --create=notifications
 php artisan make:migration create_user_feedback_reports_table --create=user_feedback_reports
 php artisan make:migration create_wallet_types_table --create=wallet_types
 php artisan make:migration create_category_wallet_types_table --create=category_wallet_types
+
+php artisan make:migration create_exchange_rates_table --create=exchange_rates
+php artisan make:migration create_user_settings_table --create=user_settings
