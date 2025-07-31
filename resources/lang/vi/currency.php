@@ -16,4 +16,7 @@ return [
     'is_default' => 'Mặc định',
     'search_currency_placeholder' => 'Tìm kiếm tiền tệ...',
     'reset' => 'Đặt lại',
+    'set_default_success' => 'Đã đặt tiền tệ mặc định thành công.',
+    'set_default_error' => 'Không thể đặt tiền tệ mặc định.',
+    'set_default' => 'Đặt làm mặc định',
 ];

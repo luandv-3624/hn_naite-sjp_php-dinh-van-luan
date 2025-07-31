@@ -28,7 +28,6 @@
 
                     <x-flash-message />
 
-                    <!-- Button Cập nhật tỷ giá -->
                     <div class="flex justify-end mb-4">
                         <form action="{{ route('currencies.updateExchangeRates') }}" method="POST">
                             @csrf
@@ -72,6 +71,9 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($currencies as $currency)
+                                @php
+                                    $rateForDate = $currency->exchangeRates->first();
+                                @endphp
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $currency->id }}
                                     </td>
@@ -82,20 +84,25 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $currency->symbol }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        @php
-                                            $rateForDate = $currency->exchangeRates->first();
-                                        @endphp
                                         {{ $rateForDate ? $rateForDate->rate : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        @if ($currency->is_default)
-                                            <span
-                                                class="inline-flex px-2 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                {{ __('Default') }}
-                                            </span>
-                                        @else
-                                            <span class="text-gray-500 text-xs">{{ __('No') }}</span>
-                                        @endif
+                                        <form action="{{ route('currencies.changeCurrencyDefault', $currency->id) }}"
+                                            method="POST" class="inline">
+                                            @csrf
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" onchange="this.form.submit()"
+                                                    class="sr-only peer"
+                                                    {{ $rateForDate->currency_id === $currency->id ? 'checked disabled' : '' }}>
+                                                <div
+                                                    class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 
+                                                            peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed 
+                                                            after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white 
+                                                            after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+                                                            peer-checked:after:translate-x-full peer-checked:after:border-white relative">
+                                                </div>
+                                            </label>
+                                        </form>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm flex space-x-4">
                                         <a href="#" class="text-green-600 hover:text-green-900" title="View">

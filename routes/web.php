@@ -52,6 +52,8 @@ Route::middleware(['auth', 'check.admin'])
             Route::get('/', [CurrencyManagementController::class, 'index'])->name('currencies.index');
             Route::post('/update-exchange-rates', [CurrencyManagementController::class, 'updateExchangeRates'])
                 ->name('currencies.updateExchangeRates');
+            Route::post('/currencies/{currency}/change-currency-default', [CurrencyManagementController::class, 'changeCurrencyDefault'])
+                ->name('currencies.changeCurrencyDefault');
         });
     });
 

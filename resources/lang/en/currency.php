@@ -16,4 +16,7 @@ return [
     'is_default' => 'Default',
     'search_currency_placeholder' => 'Search currency...',
     'reset' => 'Reset',
+    'set_default_success' => 'Default currency has been updated successfully.',
+    'set_default_error' => 'Failed to set default currency.',
+    'set_default' => 'Set as Default',
 ];
